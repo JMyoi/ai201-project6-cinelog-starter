@@ -1,7 +1,9 @@
 # PR Response Doc — CineLog Watchlist Feature
 
 ## AI Usage
-<!-- Fill in at the end — how you used AI tools during this project -->
+I used AI for codebase orientation and review hygiene. Early on, I asked it to summarize the roles of `models.py`, `services/collection_service.py`, and `tests/test_collection.py` so I could follow the existing patterns before making watchlist changes. I also used it to check my rename, deduplication, and test work against the collection pattern, and to sanity-check commit-message wording during the history cleanup step.
+
+I wrote the Comment 4 and Comment 5 responses myself. AI helped me compare my drafts against likely reviewer objections, but the final reasoning in the doc is my own and is grounded in CineLog’s watchlist workflow rather than copied from an AI-generated argument.
 
 ## Comment 1 — Rename
 **What I did:** Renamed `save_to_watchlist()` to `add_to_watchlist()` in `services/watchlist_service.py` and updated the only route call site in `routes/watchlist/watchlist.py`. I used a project-wide search for `save_to_watchlist` to confirm there were no remaining code references after the rename.
@@ -29,6 +31,18 @@
 **What conflicted:**
 **How I resolved it:**
 **How I verified no conflict remains:**
+![alt text](image.png)
 
 ## PR Description
-<!-- Written at the end — feature overview, design decisions, manual testing steps -->
+This PR adds the CineLog watchlist feature so users can save films they want to watch later. It includes the watchlist model, service logic, and REST endpoints for viewing and adding watchlist entries. I also addressed the review feedback by renaming the watchlist helper to follow the project’s naming convention, preventing duplicate watchlist entries, and adding a missing test for the nonexistent-film case.
+
+I made two intentional design choices. First, watchlist entries default to `public=True` because CineLog is treated as a community film app and I wanted the feature to optimize for low-friction sharing and discoverability. Second, the watchlist is ordered by `date_added` rather than alphabetically because the list is meant to behave like a “what should I watch next?” queue, where the most recent additions are usually the most relevant.
+
+Manual test steps:
+1. Start the app with `python app.py`.
+2. Create or reuse a user id and a film id from the database.
+3. Send `POST /watchlist/<user_id>/add` with JSON like `{ "film_id": "<film_id>" }`.
+4. Confirm the response returns `201 Created` and includes the new watchlist entry.
+5. Send `GET /watchlist/<user_id>` and confirm the film appears in the list.
+6. Try adding the same film again and confirm the API returns `409 Conflict`.
+7. Try adding a nonexistent film id and confirm the API returns `404 Not Found`.
