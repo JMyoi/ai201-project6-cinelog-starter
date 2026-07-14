@@ -21,9 +21,9 @@
 **Tradeoff acknowledged:** The downside is privacy: some users will reasonably expect a personal watchlist to start private. That is the safer default if the product prioritized confidentiality over social use, but in this branch I’m optimizing for lower friction and the community-facing behavior the app already suggests. If privacy becomes a stronger requirement later, a visibility toggle would be the right follow-up so users can make that choice explicitly.
 
 ## Comment 5 — Sort order
-**My position:**
-**Reasoning:**
-**Engagement with reviewer's point:**
+**My position:** I agree with the maintainer’s preference and would sort watchlists by `date_added` instead of alphabetical order.
+**Reasoning:** The watchlist is a “what do I want to watch next?” queue, so the most useful default is to see the most recently added items first. That matches how people usually use a watchlist in practice: they add something when they find it, then come back later to decide what to watch. Alphabetical order is easier to scan as a static catalog, but it hides the user’s most recent intent and makes the list feel less like a personal backlog.
+**Engagement with reviewer’s point:** I understand the case for alphabetical ordering because it is deterministic and easy to scan, but it optimizes for browsing a reference list rather than acting on recent choices. In CineLog, the watchlist is user-authored and time-sensitive, so date-added better reflects the order the user created the list in and surfaces the newest items first. That makes the endpoint more useful as a planning tool, which is why I would keep the order tied to recency.
 
 ## Comment 6 — Rebase
 **What conflicted:**
